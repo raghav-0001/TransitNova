@@ -6,9 +6,10 @@ RUN apt-get update && \
 
 WORKDIR /app
 
-COPY . .
+COPY backend ./backend
+COPY frontend ./frontend
 
-RUN g++ -std=c++20 src/*.cpp -o TransitNova -pthread
+RUN g++ -std=c++20 backend/src/*.cpp -Ibackend -o TransitNova -pthread
 
 EXPOSE 8080
 

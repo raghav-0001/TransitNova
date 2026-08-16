@@ -5,11 +5,11 @@
 
 #include <algorithm>
 #include <cmath>
+#include <cstdlib>
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <string>
-#include <cstdlib>
 #include <vector>
 
 using namespace std;
@@ -39,8 +39,10 @@ string readFile(const string &path)
 void addCorsHeaders(httplib::Response &res)
 {
     res.set_header("Access-Control-Allow-Origin", "*");
-    res.set_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-    res.set_header("Access-Control-Allow-Headers", "Content-Type");
+    res.set_header("Access-Control-Allow-Methods",
+                   "GET, POST, OPTIONS");
+    res.set_header("Access-Control-Allow-Headers",
+                   "Content-Type");
 }
 
 // ============================================================
@@ -63,69 +65,91 @@ void Server::start(BusManager &manager)
             readFile("/app/frontend/index.html"),
             "text/html"); });
 
-    server.Get("/index.html", [](const httplib::Request &, httplib::Response &res)
+    server.Get("/index.html",
+               [](const httplib::Request &, httplib::Response &res)
                {
-        addCorsHeaders(res);
+                   addCorsHeaders(res);
 
-        res.set_content(
-            readFile("/app/frontend/index.html"),
-            "text/html"); });
+                   res.set_content(
+                       readFile("/app/frontend/index.html"),
+                       "text/html");
+               });
 
-    server.Get("/search.html", [](const httplib::Request &, httplib::Response &res)
+    server.Get("/search.html",
+               [](const httplib::Request &, httplib::Response &res)
                {
-        addCorsHeaders(res);
+                   addCorsHeaders(res);
 
-        res.set_content(
-            readFile("/app/frontend/search.html"),
-            "text/html"); });
+                   res.set_content(
+                       readFile("/app/frontend/search.html"),
+                       "text/html");
+               });
 
-    server.Get("/journey.html", [](const httplib::Request &, httplib::Response &res)
+    server.Get("/journey.html",
+               [](const httplib::Request &, httplib::Response &res)
                {
-        addCorsHeaders(res);
+                   addCorsHeaders(res);
 
-        res.set_content(
-            readFile("/app/frontend/journey.html"),
-            "text/html"); });
+                   res.set_content(
+                       readFile("/app/frontend/journey.html"),
+                       "text/html");
+               });
 
     // ========================================================
     // CSS
     // ========================================================
 
-    server.Get("/style.css", [](const httplib::Request &, httplib::Response &res)
+    server.Get("/style.css",
+               [](const httplib::Request &, httplib::Response &res)
                {
-        addCorsHeaders(res);
+                   addCorsHeaders(res);
 
-        res.set_content(
-            readFile("/app/frontend/style.css"),
-            "text/css"); });
+                   res.set_content(
+                       readFile("/app/frontend/style.css"),
+                       "text/css");
+               });
 
     // ========================================================
     // JAVASCRIPT
     // ========================================================
 
-    server.Get("/script.js", [](const httplib::Request &, httplib::Response &res)
+    server.Get("/script.js",
+               [](const httplib::Request &, httplib::Response &res)
                {
-        addCorsHeaders(res);
+                   addCorsHeaders(res);
 
-        res.set_content(
-            readFile("/app/frontend/script.js"),
-            "application/javascript"); });
+                   res.set_content(
+                       readFile("/app/frontend/script.js"),
+                       "application/javascript");
+               });
 
-    server.Get("/journey.js", [](const httplib::Request &, httplib::Response &res)
+    server.Get("/journey.js",
+               [](const httplib::Request &, httplib::Response &res)
                {
-        addCorsHeaders(res);
+                   addCorsHeaders(res);
 
-        res.set_content(
-            readFile("/app/frontend/journey.js"),
-            "application/javascript"); });
+                   res.set_content(
+                       readFile("/app/frontend/journey.js"),
+                       "application/javascript");
+               });
 
-    server.Get("/search.js", [](const httplib::Request &, httplib::Response &res)
+    server.Get("/search.js",
+               [](const httplib::Request &, httplib::Response &res)
                {
-        addCorsHeaders(res);
+                   addCorsHeaders(res);
 
-        res.set_content(
-            readFile("/app/frontend/search.js"),
-            "application/javascript"); });
+                   res.set_content(
+                       readFile("/app/frontend/search.js"),
+                       "application/javascript");
+               });
+
+    // ========================================================
+    // FRONTEND IMAGES
+    // ========================================================
+
+    server.set_mount_point(
+        "/images",
+        "/app/frontend/images");
 
     // ========================================================
     // BACKEND STATUS
@@ -144,14 +168,6 @@ void Server::start(BusManager &manager)
                        response.dump(),
                        "application/json");
                });
-
-    // ========================================================
-    // FRONTEND IMAGES
-    // ========================================================
-
-    server.set_mount_point(
-        "/images",
-        "/app/frontend/images");
 
     // ========================================================
     // TEST API
@@ -175,18 +191,18 @@ void Server::start(BusManager &manager)
     // ========================================================
 
     server.Get("/api/buses",
-               [&manager](const httplib::Request &, httplib::Response &res)
+               [&manager](const httplib::Request &,
+                          httplib::Response &res)
                {
                    addCorsHeaders(res);
 
-                   nlohmann::json response;
+                   json response;
 
                    // ====================================================
-                   // ACTIVE BUSES
+                   // ACTIVE
                    // ====================================================
 
-                   response["active"] =
-                       nlohmann::json::array();
+                   response["active"] = json::array();
 
                    for (const Bus &bus :
                         manager.getActiveBusData())
@@ -214,8 +230,7 @@ void Server::start(BusManager &manager)
                    // PARK 1
                    // ====================================================
 
-                   response["park1"] =
-                       nlohmann::json::array();
+                   response["park1"] = json::array();
 
                    for (const Bus &bus :
                         manager.getPark1BusData())
@@ -243,8 +258,7 @@ void Server::start(BusManager &manager)
                    // PARK 2
                    // ====================================================
 
-                   response["park2"] =
-                       nlohmann::json::array();
+                   response["park2"] = json::array();
 
                    for (const Bus &bus :
                         manager.getPark2BusData())
@@ -272,8 +286,7 @@ void Server::start(BusManager &manager)
                    // MAINTENANCE
                    // ====================================================
 
-                   response["maintenance"] =
-                       nlohmann::json::array();
+                   response["maintenance"] = json::array();
 
                    for (const Bus &bus :
                         manager.getMaintenanceBusData())
@@ -445,15 +458,11 @@ void Server::start(BusManager &manager)
 
                 vector<Candidate> candidates;
 
-                // ====================================================
-                // GET ALL ACTIVE BUSES
-                // ====================================================
-
                 vector<Bus> activeBuses =
                     manager.getActiveBusData();
 
                 // ====================================================
-                // CHECK EVERY ACTIVE BUS
+                // CHECK ACTIVE BUSES
                 // ====================================================
 
                 for (const Bus &bus : activeBuses)
@@ -476,9 +485,9 @@ void Server::start(BusManager &manager)
                     float progress =
                         bus.getProgress();
 
-                    // ====================================================
+                    // =================================================
                     // HAS BUS PASSED PICKUP?
-                    // ====================================================
+                    // =================================================
 
                     if (requiredDirection == "east")
                     {
@@ -491,22 +500,22 @@ void Server::start(BusManager &manager)
                             continue;
                     }
 
-                    // ====================================================
+                    // =================================================
                     // CALCULATE ETA
-                    // ====================================================
+                    // =================================================
 
                     float arrivalTime = 0.0f;
 
-                    // Bus currently at pickup stop.
+                    // Bus currently at pickup.
 
                     if (busIndex == pickupIndex)
                     {
                         arrivalTime = 0.0f;
                     }
 
-                    // ====================================================
+                    // =================================================
                     // EASTBOUND
-                    // ====================================================
+                    // =================================================
 
                     else if (requiredDirection == "east")
                     {
@@ -523,9 +532,9 @@ void Server::start(BusManager &manager)
                         }
                     }
 
-                    // ====================================================
+                    // =================================================
                     // WESTBOUND
-                    // ====================================================
+                    // =================================================
 
                     else
                     {
@@ -542,8 +551,8 @@ void Server::start(BusManager &manager)
                         }
                     }
 
-                    candidates.push_back(
-                        {bus, arrivalTime});
+                    candidates.push_back({bus,
+                                          arrivalTime});
                 }
 
                 // ====================================================
@@ -564,8 +573,7 @@ void Server::start(BusManager &manager)
                 // RETURN TOP 3
                 // ====================================================
 
-                json buses =
-                    json::array();
+                json buses = json::array();
 
                 int count =
                     min(
@@ -616,8 +624,7 @@ void Server::start(BusManager &manager)
                         {"arrivalMinutes",
                          arrivalMinutes}};
 
-                    buses.push_back(
-                        busData);
+                    buses.push_back(busData);
                 }
 
                 // ====================================================
@@ -688,327 +695,364 @@ void Server::start(BusManager &manager)
     // SEARCH BUS
     // ========================================================
 
-    server.Post("/api/search",
-                [&manager](const httplib::Request &req,
-                           httplib::Response &res)
+    server.Post(
+        "/api/search",
+        [&manager](const httplib::Request &req,
+                   httplib::Response &res)
+        {
+            addCorsHeaders(res);
+
+            try
+            {
+                if (req.body.empty())
                 {
-                    addCorsHeaders(res);
+                    res.status = 400;
 
-                    try
-                    {
-                        if (req.body.empty())
-                        {
-                            res.status = 400;
+                    res.set_content(
+                        R"({"message":"Missing request body"})",
+                        "application/json");
 
-                            res.set_content(
-                                R"({"message":"Missing request body"})",
-                                "application/json");
+                    return;
+                }
 
-                            return;
-                        }
+                json body =
+                    json::parse(req.body);
 
-                        json body = json::parse(req.body);
+                if (!body.contains("busNumber"))
+                {
+                    res.status = 400;
 
-                        if (!body.contains("busNumber"))
-                        {
-                            res.status = 400;
+                    res.set_content(
+                        R"({"message":"Bus number is required"})",
+                        "application/json");
 
-                            res.set_content(
-                                R"({"message":"Bus number is required"})",
-                                "application/json");
+                    return;
+                }
 
-                            return;
-                        }
+                string busNumber =
+                    body["busNumber"].get<string>();
 
-                        string busNumber =
-                            body["busNumber"].get<string>();
+                Bus *bus =
+                    manager.searchBusByNumber(
+                        busNumber);
 
-                        Bus *bus =
-                            manager.searchBusByNumber(
-                                busNumber);
+                if (bus == nullptr)
+                {
+                    res.status = 404;
 
-                        if (bus == nullptr)
-                        {
-                            res.status = 404;
+                    res.set_content(
+                        R"({"message":"Bus not found"})",
+                        "application/json");
 
-                            res.set_content(
-                                R"({"message":"Bus not found"})",
-                                "application/json");
+                    return;
+                }
 
-                            return;
-                        }
+                json response = {
+                    {"id",
+                     bus->getID()},
 
-                        json response = {
-                            {"id", bus->getID()},
-                            {"busNumber",
-                             bus->getBusNumber()},
-                            {"route",
-                             bus->getRoute()},
-                            {"currentStop",
-                             bus->getCurrentStop()},
-                            {"direction",
-                             bus->getDirection()},
-                            {"lastStop",
-                             bus->getLastStop()},
-                            {"lastPark",
-                             bus->getLastPark()},
-                            {"capacity",
-                             bus->getCapacity()},
-                            {"priority",
-                             bus->getPriority()},
-                            {"available",
-                             bus->isAvailable()},
-                            {"maintenance",
-                             bus->isMaintenance()},
-                            {"visibleOnMap",
-                             bus->isVisibleOnMap()},
-                            {"currentStopIndex",
-                             bus->getCurrentStopIndex()},
-                            {"elapsedTime",
-                             bus->getElapsedTime()},
-                            {"progress",
-                             bus->getProgress()}};
+                    {"busNumber",
+                     bus->getBusNumber()},
 
-                        res.set_content(
-                            response.dump(),
-                            "application/json");
-                    }
+                    {"route",
+                     bus->getRoute()},
 
-                    catch (const exception &e)
-                    {
-                        res.status = 400;
+                    {"currentStop",
+                     bus->getCurrentStop()},
 
-                        json response = {
-                            {"message",
-                             "Invalid JSON request"},
-                            {"error",
-                             e.what()}};
+                    {"direction",
+                     bus->getDirection()},
 
-                        res.set_content(
-                            response.dump(),
-                            "application/json");
-                    }
-                });
+                    {"lastStop",
+                     bus->getLastStop()},
+
+                    {"lastPark",
+                     bus->getLastPark()},
+
+                    {"capacity",
+                     bus->getCapacity()},
+
+                    {"priority",
+                     bus->getPriority()},
+
+                    {"available",
+                     bus->isAvailable()},
+
+                    {"maintenance",
+                     bus->isMaintenance()},
+
+                    {"visibleOnMap",
+                     bus->isVisibleOnMap()},
+
+                    {"currentStopIndex",
+                     bus->getCurrentStopIndex()},
+
+                    {"elapsedTime",
+                     bus->getElapsedTime()},
+
+                    {"progress",
+                     bus->getProgress()}};
+
+                res.set_content(
+                    response.dump(),
+                    "application/json");
+            }
+
+            catch (const exception &e)
+            {
+                res.status = 400;
+
+                json response = {
+                    {"message",
+                     "Invalid JSON request"},
+
+                    {"error",
+                     e.what()}};
+
+                res.set_content(
+                    response.dump(),
+                    "application/json");
+            }
+        });
 
     // ========================================================
     // MOVE BUS TO MAINTENANCE
     // ========================================================
 
-    server.Post("/api/maintenance",
-                [&manager](const httplib::Request &req,
-                           httplib::Response &res)
+    server.Post(
+        "/api/maintenance",
+        [&manager](const httplib::Request &req,
+                   httplib::Response &res)
+        {
+            addCorsHeaders(res);
+
+            try
+            {
+                if (req.body.empty())
                 {
-                    addCorsHeaders(res);
+                    res.status = 400;
 
-                    try
-                    {
-                        if (req.body.empty())
-                        {
-                            res.status = 400;
+                    res.set_content(
+                        R"({"message":"Missing request body"})",
+                        "application/json");
 
-                            res.set_content(
-                                R"({"message":"Missing request body"})",
-                                "application/json");
+                    return;
+                }
 
-                            return;
-                        }
+                json body =
+                    json::parse(req.body);
 
-                        json body = json::parse(req.body);
+                if (!body.contains("busNumber"))
+                {
+                    res.status = 400;
 
-                        if (!body.contains("busNumber"))
-                        {
-                            res.status = 400;
+                    res.set_content(
+                        R"({"message":"Bus number is required"})",
+                        "application/json");
 
-                            res.set_content(
-                                R"({"message":"Bus number is required"})",
-                                "application/json");
+                    return;
+                }
 
-                            return;
-                        }
+                string busNumber =
+                    body["busNumber"].get<string>();
 
-                        string busNumber =
-                            body["busNumber"].get<string>();
+                Bus *bus =
+                    manager.searchBusByNumber(
+                        busNumber);
 
-                        Bus *bus =
-                            manager.searchBusByNumber(
-                                busNumber);
+                if (bus == nullptr)
+                {
+                    res.status = 404;
 
-                        if (bus == nullptr)
-                        {
-                            res.status = 404;
+                    res.set_content(
+                        R"({"message":"Bus not found"})",
+                        "application/json");
 
-                            res.set_content(
-                                R"({"message":"Bus not found"})",
-                                "application/json");
+                    return;
+                }
 
-                            return;
-                        }
+                int busID =
+                    bus->getID();
 
-                        int busID =
-                            bus->getID();
+                string currentStop =
+                    bus->getCurrentStop();
 
-                        string currentStop =
-                            bus->getCurrentStop();
+                string lastStop =
+                    bus->getLastStop();
 
-                        string lastStop =
-                            bus->getLastStop();
+                string lastPark =
+                    bus->getLastPark();
 
-                        string lastPark =
-                            bus->getLastPark();
+                manager.moveToMaintenance(
+                    busID);
 
-                        manager.moveToMaintenance(
-                            busID);
+                json response = {
+                    {"message",
+                     "Bus moved to maintenance successfully"},
 
-                        json response = {
-                            {"message",
-                             "Bus moved to maintenance successfully"},
-                            {"busNumber",
-                             busNumber},
-                            {"busID",
-                             busID},
-                            {"currentStop",
-                             currentStop},
-                            {"lastStop",
-                             lastStop},
-                            {"lastPark",
-                             lastPark},
-                            {"priority",
-                             0},
-                            {"maintenance",
-                             true}};
+                    {"busNumber",
+                     busNumber},
 
-                        res.set_content(
-                            response.dump(),
-                            "application/json");
-                    }
+                    {"busID",
+                     busID},
 
-                    catch (const exception &e)
-                    {
-                        res.status = 400;
+                    {"currentStop",
+                     currentStop},
 
-                        json response = {
-                            {"message",
-                             "Invalid maintenance request"},
-                            {"error",
-                             e.what()}};
+                    {"lastStop",
+                     lastStop},
 
-                        res.set_content(
-                            response.dump(),
-                            "application/json");
-                    }
-                });
+                    {"lastPark",
+                     lastPark},
+
+                    {"priority",
+                     0},
+
+                    {"maintenance",
+                     true}};
+
+                res.set_content(
+                    response.dump(),
+                    "application/json");
+            }
+
+            catch (const exception &e)
+            {
+                res.status = 400;
+
+                json response = {
+                    {"message",
+                     "Invalid maintenance request"},
+
+                    {"error",
+                     e.what()}};
+
+                res.set_content(
+                    response.dump(),
+                    "application/json");
+            }
+        });
 
     // ========================================================
     // RESTORE BUS FROM MAINTENANCE
     // ========================================================
 
-    server.Post("/api/maintenance/restore",
-                [&manager](const httplib::Request &req,
-                           httplib::Response &res)
+    server.Post(
+        "/api/maintenance/restore",
+        [&manager](const httplib::Request &req,
+                   httplib::Response &res)
+        {
+            addCorsHeaders(res);
+
+            try
+            {
+                if (req.body.empty())
                 {
-                    addCorsHeaders(res);
+                    res.status = 400;
 
-                    try
-                    {
-                        if (req.body.empty())
-                        {
-                            res.status = 400;
+                    res.set_content(
+                        R"({"message":"Missing request body"})",
+                        "application/json");
 
-                            res.set_content(
-                                R"({"message":"Missing request body"})",
-                                "application/json");
+                    return;
+                }
 
-                            return;
-                        }
+                json body =
+                    json::parse(req.body);
 
-                        json body =
-                            json::parse(req.body);
+                if (!body.contains("busNumber"))
+                {
+                    res.status = 400;
 
-                        if (!body.contains("busNumber"))
-                        {
-                            res.status = 400;
+                    res.set_content(
+                        R"({"message":"Bus number is required"})",
+                        "application/json");
 
-                            res.set_content(
-                                R"({"message":"Bus number is required"})",
-                                "application/json");
+                    return;
+                }
 
-                            return;
-                        }
+                string busNumber =
+                    body["busNumber"].get<string>();
 
-                        string busNumber =
-                            body["busNumber"].get<string>();
+                Bus *bus =
+                    manager.searchMaintenanceBusByNumber(
+                        busNumber);
 
-                        Bus *bus =
-                            manager.searchMaintenanceBusByNumber(
-                                busNumber);
+                if (bus == nullptr)
+                {
+                    res.status = 404;
 
-                        if (bus == nullptr)
-                        {
-                            res.status = 404;
+                    res.set_content(
+                        R"({"message":"Bus not found in maintenance"})",
+                        "application/json");
 
-                            res.set_content(
-                                R"({"message":"Bus not found in maintenance"})",
-                                "application/json");
+                    return;
+                }
 
-                            return;
-                        }
+                int busID =
+                    bus->getID();
 
-                        int busID =
-                            bus->getID();
+                bool restored =
+                    manager.restoreFromMaintenance(
+                        busID);
 
-                        bool restored =
-                            manager.restoreFromMaintenance(
-                                busID);
+                if (!restored)
+                {
+                    res.status = 500;
 
-                        if (!restored)
-                        {
-                            res.status = 500;
+                    res.set_content(
+                        R"({"message":"Failed to restore bus"})",
+                        "application/json");
 
-                            res.set_content(
-                                R"({"message":"Failed to restore bus"})",
-                                "application/json");
+                    return;
+                }
 
-                            return;
-                        }
+                json response = {
+                    {"message",
+                     "Bus restored successfully"},
 
-                        json response = {
-                            {"message",
-                             "Bus restored successfully"},
-                            {"busNumber",
-                             busNumber},
-                            {"busID",
-                             busID},
-                            {"currentStop",
-                             "Ratnapark Buspark"},
-                            {"direction",
-                             "east"},
-                            {"priority",
-                             1},
-                            {"maintenance",
-                             false},
-                            {"available",
-                             true}};
+                    {"busNumber",
+                     busNumber},
 
-                        res.set_content(
-                            response.dump(),
-                            "application/json");
-                    }
+                    {"busID",
+                     busID},
 
-                    catch (const exception &e)
-                    {
-                        res.status = 400;
+                    {"currentStop",
+                     "Ratnapark Buspark"},
 
-                        json response = {
-                            {"message",
-                             "Invalid restore request"},
-                            {"error",
-                             e.what()}};
+                    {"direction",
+                     "east"},
 
-                        res.set_content(
-                            response.dump(),
-                            "application/json");
-                    }
-                });
+                    {"priority",
+                     1},
+
+                    {"maintenance",
+                     false},
+
+                    {"available",
+                     true}};
+
+                res.set_content(
+                    response.dump(),
+                    "application/json");
+            }
+
+            catch (const exception &e)
+            {
+                res.status = 400;
+
+                json response = {
+                    {"message",
+                     "Invalid restore request"},
+
+                    {"error",
+                     e.what()}};
+
+                res.set_content(
+                    response.dump(),
+                    "application/json");
+            }
+        });
 
     // ========================================================
     // SERVER START
