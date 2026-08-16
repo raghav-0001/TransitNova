@@ -62,7 +62,7 @@ void Server::start(BusManager &manager)
         addCorsHeaders(res);
 
         res.set_content(
-            readFile("/app/frontend/index.html"),
+            readFile("frontend/index.html"),
             "text/html"); });
 
     server.Get("/index.html",
@@ -71,7 +71,7 @@ void Server::start(BusManager &manager)
                    addCorsHeaders(res);
 
                    res.set_content(
-                       readFile("/app/frontend/index.html"),
+                       readFile("frontend/index.html"),
                        "text/html");
                });
 
@@ -81,7 +81,7 @@ void Server::start(BusManager &manager)
                    addCorsHeaders(res);
 
                    res.set_content(
-                       readFile("/app/frontend/search.html"),
+                       readFile("frontend/search.html"),
                        "text/html");
                });
 
@@ -91,7 +91,7 @@ void Server::start(BusManager &manager)
                    addCorsHeaders(res);
 
                    res.set_content(
-                       readFile("/app/frontend/journey.html"),
+                       readFile("frontend/journey.html"),
                        "text/html");
                });
 
@@ -105,7 +105,7 @@ void Server::start(BusManager &manager)
                    addCorsHeaders(res);
 
                    res.set_content(
-                       readFile("/app/frontend/style.css"),
+                       readFile("frontend/style.css"),
                        "text/css");
                });
 
@@ -119,7 +119,7 @@ void Server::start(BusManager &manager)
                    addCorsHeaders(res);
 
                    res.set_content(
-                       readFile("/app/frontend/script.js"),
+                       readFile("frontend/script.js"),
                        "application/javascript");
                });
 
@@ -129,7 +129,7 @@ void Server::start(BusManager &manager)
                    addCorsHeaders(res);
 
                    res.set_content(
-                       readFile("/app/frontend/journey.js"),
+                       readFile("frontend/journey.js"),
                        "application/javascript");
                });
 
@@ -139,7 +139,7 @@ void Server::start(BusManager &manager)
                    addCorsHeaders(res);
 
                    res.set_content(
-                       readFile("/app/frontend/search.js"),
+                       readFile("frontend/search.js"),
                        "application/javascript");
                });
 
@@ -149,7 +149,7 @@ void Server::start(BusManager &manager)
 
     server.set_mount_point(
         "/images",
-        "/app/frontend/images");
+        "frontend/images");
 
     // ========================================================
     // BACKEND STATUS
