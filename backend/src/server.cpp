@@ -60,7 +60,7 @@ void Server::start(BusManager &manager)
         addCorsHeaders(res);
 
         res.set_content(
-            readFile("../../frontend/index.html"),
+            readFile("/app/frontend/index.html"),
             "text/html"); });
 
     server.Get("/index.html", [](const httplib::Request &, httplib::Response &res)
@@ -68,7 +68,7 @@ void Server::start(BusManager &manager)
         addCorsHeaders(res);
 
         res.set_content(
-            readFile("../../frontend/index.html"),
+            readFile("/app/frontend/index.html"),
             "text/html"); });
 
     server.Get("/search.html", [](const httplib::Request &, httplib::Response &res)
@@ -76,7 +76,7 @@ void Server::start(BusManager &manager)
         addCorsHeaders(res);
 
         res.set_content(
-            readFile("../../frontend/search.html"),
+            readFile("/app/frontend/search.html"),
             "text/html"); });
 
     server.Get("/journey.html", [](const httplib::Request &, httplib::Response &res)
@@ -84,7 +84,7 @@ void Server::start(BusManager &manager)
         addCorsHeaders(res);
 
         res.set_content(
-            readFile("../../frontend/journey.html"),
+            readFile("/app/frontend/journey.html"),
             "text/html"); });
 
     // ========================================================
@@ -96,7 +96,7 @@ void Server::start(BusManager &manager)
         addCorsHeaders(res);
 
         res.set_content(
-            readFile("../../frontend/style.css"),
+            readFile("/app/frontend/style.css"),
             "text/css"); });
 
     // ========================================================
@@ -108,7 +108,7 @@ void Server::start(BusManager &manager)
         addCorsHeaders(res);
 
         res.set_content(
-            readFile("../../frontend/script.js"),
+            readFile("/app/frontend/script.js"),
             "application/javascript"); });
 
     server.Get("/journey.js", [](const httplib::Request &, httplib::Response &res)
@@ -116,7 +116,7 @@ void Server::start(BusManager &manager)
         addCorsHeaders(res);
 
         res.set_content(
-            readFile("../../frontend/journey.js"),
+            readFile("/app/frontend/journey.js"),
             "application/javascript"); });
 
     server.Get("/search.js", [](const httplib::Request &, httplib::Response &res)
@@ -124,7 +124,7 @@ void Server::start(BusManager &manager)
         addCorsHeaders(res);
 
         res.set_content(
-            readFile("../../frontend/search.js"),
+            readFile("/app/frontend/search.js"),
             "application/javascript"); });
 
     // ========================================================
@@ -151,7 +151,7 @@ void Server::start(BusManager &manager)
 
     server.set_mount_point(
         "/images",
-        "../../frontend/images");
+        "/app/frontend/images");
 
     // ========================================================
     // TEST API
@@ -171,7 +171,7 @@ void Server::start(BusManager &manager)
                });
 
     // ========================================================
-    // GET ALL ACTIVE BUSES
+    // GET ALL ACTIVE / PARKED / MAINTENANCE BUSES
     // ========================================================
 
     server.Get("/api/buses",
@@ -179,103 +179,126 @@ void Server::start(BusManager &manager)
                {
                    addCorsHeaders(res);
 
-                   auto active =
-                       manager.getActiveBusData();
+                   nlohmann::json response;
 
-                   auto park1 =
-                       manager.getPark1BusData();
+                   // ====================================================
+                   // ACTIVE BUSES
+                   // ====================================================
 
-                   auto park2 =
-                       manager.getPark2BusData();
+                   response["active"] =
+                       nlohmann::json::array();
 
-                   auto maintenance =
-                       manager.getMaintenanceBusData();
-
-                   auto busToJson =
-                       [](const Bus &bus)
+                   for (const Bus &bus :
+                        manager.getActiveBusData())
                    {
-                       std::ostringstream json;
+                       response["active"].push_back({{"id", bus.getID()},
+                                                     {"busNumber", bus.getBusNumber()},
+                                                     {"route", bus.getRoute()},
+                                                     {"currentStop", bus.getCurrentStop()},
+                                                     {"direction", bus.getDirection()},
+                                                     {"lastStop", bus.getLastStop()},
+                                                     {"lastPark", bus.getLastPark()},
+                                                     {"capacity", bus.getCapacity()},
+                                                     {"priority", bus.getPriority()},
+                                                     {"available", bus.isAvailable()},
+                                                     {"maintenance", bus.isMaintenance()},
+                                                     {"currentStopIndex",
+                                                      bus.getCurrentStopIndex()},
+                                                     {"elapsedTime",
+                                                      bus.getElapsedTime()},
+                                                     {"progress",
+                                                      bus.getProgress()}});
+                   }
 
-                       std::string direction =
-                           bus.getDirection();
+                   // ====================================================
+                   // PARK 1
+                   // ====================================================
 
-                       json
-                           << "{"
-                           << "\"id\":"
-                           << bus.getID()
-                           << ","
-                           << "\"busNumber\":\""
-                           << bus.getBusNumber()
-                           << "\","
-                           << "\"direction\":\""
-                           << direction
-                           << "\","
-                           << "\"currentStop\":\""
-                           << bus.getCurrentStop()
-                           << "\","
-                           << "\"currentStopIndex\":"
-                           << bus.getCurrentStopIndex()
-                           << ","
-                           << "\"progress\":"
-                           << bus.getProgress()
-                           << ","
-                           << "\"priority\":"
-                           << bus.getPriority()
-                           << ","
-                           << "\"available\":"
-                           << (bus.isAvailable()
-                                   ? "true"
-                                   : "false")
-                           << "}";
+                   response["park1"] =
+                       nlohmann::json::array();
 
-                       return json.str();
-                   };
-
-                   auto vectorToJson =
-                       [&busToJson](const std::vector<Bus> &buses)
+                   for (const Bus &bus :
+                        manager.getPark1BusData())
                    {
-                       std::ostringstream json;
+                       response["park1"].push_back({{"id", bus.getID()},
+                                                    {"busNumber", bus.getBusNumber()},
+                                                    {"route", bus.getRoute()},
+                                                    {"currentStop", bus.getCurrentStop()},
+                                                    {"direction", bus.getDirection()},
+                                                    {"lastStop", bus.getLastStop()},
+                                                    {"lastPark", bus.getLastPark()},
+                                                    {"capacity", bus.getCapacity()},
+                                                    {"priority", bus.getPriority()},
+                                                    {"available", bus.isAvailable()},
+                                                    {"maintenance", bus.isMaintenance()},
+                                                    {"currentStopIndex",
+                                                     bus.getCurrentStopIndex()},
+                                                    {"elapsedTime",
+                                                     bus.getElapsedTime()},
+                                                    {"progress",
+                                                     bus.getProgress()}});
+                   }
 
-                       json << "[";
+                   // ====================================================
+                   // PARK 2
+                   // ====================================================
 
-                       for (size_t i = 0;
-                            i < buses.size();
-                            ++i)
-                       {
-                           if (i > 0)
-                           {
-                               json << ",";
-                           }
+                   response["park2"] =
+                       nlohmann::json::array();
 
-                           json
-                               << busToJson(
-                                      buses[i]);
-                       }
+                   for (const Bus &bus :
+                        manager.getPark2BusData())
+                   {
+                       response["park2"].push_back({{"id", bus.getID()},
+                                                    {"busNumber", bus.getBusNumber()},
+                                                    {"route", bus.getRoute()},
+                                                    {"currentStop", bus.getCurrentStop()},
+                                                    {"direction", bus.getDirection()},
+                                                    {"lastStop", bus.getLastStop()},
+                                                    {"lastPark", bus.getLastPark()},
+                                                    {"capacity", bus.getCapacity()},
+                                                    {"priority", bus.getPriority()},
+                                                    {"available", bus.isAvailable()},
+                                                    {"maintenance", bus.isMaintenance()},
+                                                    {"currentStopIndex",
+                                                     bus.getCurrentStopIndex()},
+                                                    {"elapsedTime",
+                                                     bus.getElapsedTime()},
+                                                    {"progress",
+                                                     bus.getProgress()}});
+                   }
 
-                       json << "]";
+                   // ====================================================
+                   // MAINTENANCE
+                   // ====================================================
 
-                       return json.str();
-                   };
+                   response["maintenance"] =
+                       nlohmann::json::array();
 
-                   std::ostringstream json;
-
-                   json
-                       << "{"
-                       << "\"active\":"
-                       << vectorToJson(active)
-                       << ","
-                       << "\"park1\":"
-                       << vectorToJson(park1)
-                       << ","
-                       << "\"park2\":"
-                       << vectorToJson(park2)
-                       << ","
-                       << "\"maintenance\":"
-                       << vectorToJson(maintenance)
-                       << "}";
+                   for (const Bus &bus :
+                        manager.getMaintenanceBusData())
+                   {
+                       response["maintenance"].push_back({{"id", bus.getID()},
+                                                          {"busNumber", bus.getBusNumber()},
+                                                          {"route", bus.getRoute()},
+                                                          {"currentStop", bus.getCurrentStop()},
+                                                          {"direction", bus.getDirection()},
+                                                          {"lastStop", bus.getLastStop()},
+                                                          {"lastPark", bus.getLastPark()},
+                                                          {"capacity", bus.getCapacity()},
+                                                          {"priority", bus.getPriority()},
+                                                          {"available", bus.isAvailable()},
+                                                          {"maintenance", bus.isMaintenance()},
+                                                          {"currentStopIndex",
+                                                           bus.getCurrentStopIndex()},
+                                                          {"elapsedTime",
+                                                           bus.getElapsedTime()},
+                                                          {"progress",
+                                                           bus.getProgress()}});
+                   }
 
                    res.set_content(
-                       json.str(),
+                       response.dump(4),
                        "application/json");
                });
 
@@ -385,12 +408,6 @@ void Server::start(BusManager &manager)
 
                 // ====================================================
                 // CALCULATE TRAVEL TIME
-                //
-                // This is ONLY:
-                //
-                // pickup -> destination
-                //
-                // Waiting for the bus is NOT included here.
                 // ====================================================
 
                 float journeyTravelTime = 0.0f;
@@ -441,23 +458,11 @@ void Server::start(BusManager &manager)
 
                 for (const Bus &bus : activeBuses)
                 {
-                    // ------------------------------------------------
-                    // Ignore unavailable buses
-                    // ------------------------------------------------
-
                     if (!bus.isAvailable())
                         continue;
 
-                    // ------------------------------------------------
-                    // Ignore maintenance buses
-                    // ------------------------------------------------
-
                     if (bus.isMaintenance())
                         continue;
-
-                    // ------------------------------------------------
-                    // Bus must travel in the required direction
-                    // ------------------------------------------------
 
                     if (bus.getDirection() !=
                         requiredDirection)
@@ -472,66 +477,30 @@ void Server::start(BusManager &manager)
                         bus.getProgress();
 
                     // ====================================================
-                    // HAS THE BUS ALREADY PASSED THE PICKUP STOP?
+                    // HAS BUS PASSED PICKUP?
                     // ====================================================
 
                     if (requiredDirection == "east")
                     {
-                        /*
-                         * Example:
-                         *
-                         * Pickup = Baneshwor (4)
-                         *
-                         * Bus at:
-                         *
-                         * 2 -> valid
-                         * 3 -> valid
-                         * 4 -> valid / currently here
-                         * 5 -> already passed -> reject
-                         */
-
                         if (busIndex > pickupIndex)
                             continue;
                     }
                     else
                     {
-                        /*
-                         * Example:
-                         *
-                         * Pickup = Baneshwor (4)
-                         *
-                         * Bus at:
-                         *
-                         * 6 -> valid
-                         * 5 -> valid
-                         * 4 -> valid / currently here
-                         * 3 -> already passed -> reject
-                         */
-
                         if (busIndex < pickupIndex)
                             continue;
                     }
 
                     // ====================================================
-                    // CALCULATE ETA TO PICKUP
+                    // CALCULATE ETA
                     // ====================================================
 
                     float arrivalTime = 0.0f;
 
-                    // ====================================================
-                    // BUS IS CURRENTLY AT PICKUP STOP
-                    // ====================================================
+                    // Bus currently at pickup stop.
 
                     if (busIndex == pickupIndex)
                     {
-                        /*
-                         * The bus has reached the user's stop.
-                         *
-                         * Therefore:
-                         *
-                         * ETA = 0
-                         */
-
                         arrivalTime = 0.0f;
                     }
 
@@ -541,25 +510,9 @@ void Server::start(BusManager &manager)
 
                     else if (requiredDirection == "east")
                     {
-                        /*
-                         * Example:
-                         *
-                         * Bus = Maitighar (2)
-                         * Pickup = Baneshwor (4)
-                         *
-                         * Need:
-                         *
-                         * Maitighar -> Bijulibazar
-                         * Bijulibazar -> Baneshwor
-                         */
-
-                        // Remaining portion of current segment.
-
                         arrivalTime +=
                             travelTime[busIndex] *
                             (1.0f - progress);
-
-                        // Complete segments after current stop.
 
                         for (int i = busIndex + 1;
                              i < pickupIndex;
@@ -576,26 +529,9 @@ void Server::start(BusManager &manager)
 
                     else
                     {
-                        /*
-                         * Example:
-                         *
-                         * Bus = Thimi (13)
-                         * Pickup = Baneshwor (4)
-                         *
-                         * Need:
-                         *
-                         * Thimi -> Gatthaghar
-                         * ...
-                         * Bijulibazar -> Baneshwor
-                         */
-
-                        // Remaining portion of current segment.
-
                         arrivalTime +=
                             travelTime[busIndex - 1] *
                             (1.0f - progress);
-
-                        // Complete segments.
 
                         for (int i = busIndex - 2;
                              i >= pickupIndex;
@@ -606,16 +542,12 @@ void Server::start(BusManager &manager)
                         }
                     }
 
-                    // ====================================================
-                    // STORE BUS
-                    // ====================================================
-
-                    candidates.push_back({bus,
-                                          arrivalTime});
+                    candidates.push_back(
+                        {bus, arrivalTime});
                 }
 
                 // ====================================================
-                // SORT BY EARLIEST PICKUP ARRIVAL
+                // SORT BY EARLIEST ARRIVAL
                 // ====================================================
 
                 sort(
@@ -650,9 +582,6 @@ void Server::start(BusManager &manager)
 
                     const Bus &bus =
                         candidate.bus;
-
-                    // Round UP so the user isn't told
-                    // a bus arrives earlier than it actually does.
 
                     int arrivalMinutes =
                         static_cast<int>(
@@ -795,7 +724,8 @@ void Server::start(BusManager &manager)
                             body["busNumber"].get<string>();
 
                         Bus *bus =
-                            manager.searchBusByNumber(busNumber);
+                            manager.searchBusByNumber(
+                                busNumber);
 
                         if (bus == nullptr)
                         {
@@ -810,142 +740,55 @@ void Server::start(BusManager &manager)
 
                         json response = {
                             {"id", bus->getID()},
-                            {"busNumber", bus->getBusNumber()},
-                            {"route", bus->getRoute()},
-                            {"currentStop", bus->getCurrentStop()},
-                            {"direction", bus->getDirection()},
-                            {"lastStop", bus->getLastStop()},
-                            {"lastPark", bus->getLastPark()},
-                            {"capacity", bus->getCapacity()},
-                            {"priority", bus->getPriority()},
-                            {"available", bus->isAvailable()},
-                            {"maintenance", bus->isMaintenance()},
-                            {"visibleOnMap", bus->isVisibleOnMap()},
-                            {"currentStopIndex", bus->getCurrentStopIndex()},
-                            {"elapsedTime", bus->getElapsedTime()},
-                            {"progress", bus->getProgress()}};
+                            {"busNumber",
+                             bus->getBusNumber()},
+                            {"route",
+                             bus->getRoute()},
+                            {"currentStop",
+                             bus->getCurrentStop()},
+                            {"direction",
+                             bus->getDirection()},
+                            {"lastStop",
+                             bus->getLastStop()},
+                            {"lastPark",
+                             bus->getLastPark()},
+                            {"capacity",
+                             bus->getCapacity()},
+                            {"priority",
+                             bus->getPriority()},
+                            {"available",
+                             bus->isAvailable()},
+                            {"maintenance",
+                             bus->isMaintenance()},
+                            {"visibleOnMap",
+                             bus->isVisibleOnMap()},
+                            {"currentStopIndex",
+                             bus->getCurrentStopIndex()},
+                            {"elapsedTime",
+                             bus->getElapsedTime()},
+                            {"progress",
+                             bus->getProgress()}};
 
                         res.set_content(
                             response.dump(),
                             "application/json");
                     }
+
                     catch (const exception &e)
                     {
                         res.status = 400;
 
                         json response = {
-                            {"message", "Invalid JSON request"},
-                            {"error", e.what()}};
+                            {"message",
+                             "Invalid JSON request"},
+                            {"error",
+                             e.what()}};
 
                         res.set_content(
                             response.dump(),
                             "application/json");
                     }
                 });
-
-    // ==========================================
-    // Live Bus Data API
-    // ==========================================
-
-    server.Get("/api/buses", [&manager](const httplib::Request &, httplib::Response &res)
-               {
-    addCorsHeaders(res);
-
-    nlohmann::json response;
-
-    // Active buses
-    response["active"] = nlohmann::json::array();
-
-    for (const Bus &bus : manager.getActiveBusData())
-    {
-        response["active"].push_back({
-            {"id", bus.getID()},
-            {"busNumber", bus.getBusNumber()},
-            {"route", bus.getRoute()},
-            {"currentStop", bus.getCurrentStop()},
-            {"direction", bus.getDirection()},
-            {"lastStop", bus.getLastStop()},
-            {"lastPark", bus.getLastPark()},
-            {"capacity", bus.getCapacity()},
-            {"priority", bus.getPriority()},
-            {"available", bus.isAvailable()},
-            {"maintenance", bus.isMaintenance()},
-            {"currentStopIndex", bus.getCurrentStopIndex()},
-            {"elapsedTime", bus.getElapsedTime()},
-            {"progress", bus.getProgress()}
-        });
-    }
-
-    // Park 1
-    response["park1"] = nlohmann::json::array();
-
-    for (const Bus &bus : manager.getPark1BusData())
-    {
-        response["park1"].push_back({
-            {"id", bus.getID()},
-            {"busNumber", bus.getBusNumber()},
-            {"route", bus.getRoute()},
-            {"currentStop", bus.getCurrentStop()},
-            {"direction", bus.getDirection()},
-            {"lastStop", bus.getLastStop()},
-            {"lastPark", bus.getLastPark()},
-            {"capacity", bus.getCapacity()},
-            {"priority", bus.getPriority()},
-            {"available", bus.isAvailable()},
-            {"maintenance", bus.isMaintenance()},
-            {"currentStopIndex", bus.getCurrentStopIndex()},
-            {"elapsedTime", bus.getElapsedTime()},
-            {"progress", bus.getProgress()}
-        });
-    }
-
-    // Park 2
-    response["park2"] = nlohmann::json::array();
-
-    for (const Bus &bus : manager.getPark2BusData())
-    {
-        response["park2"].push_back({
-            {"id", bus.getID()},
-            {"busNumber", bus.getBusNumber()},
-            {"route", bus.getRoute()},
-            {"currentStop", bus.getCurrentStop()},
-            {"direction", bus.getDirection()},
-            {"lastStop", bus.getLastStop()},
-            {"lastPark", bus.getLastPark()},
-            {"capacity", bus.getCapacity()},
-            {"priority", bus.getPriority()},
-            {"available", bus.isAvailable()},
-            {"maintenance", bus.isMaintenance()},
-            {"currentStopIndex", bus.getCurrentStopIndex()},
-            {"elapsedTime", bus.getElapsedTime()},
-            {"progress", bus.getProgress()}
-        });
-    }
-
-    // Maintenance
-    response["maintenance"] = nlohmann::json::array();
-
-    for (const Bus &bus : manager.getMaintenanceBusData())
-    {
-        response["maintenance"].push_back({
-            {"id", bus.getID()},
-            {"busNumber", bus.getBusNumber()},
-            {"route", bus.getRoute()},
-            {"currentStop", bus.getCurrentStop()},
-            {"direction", bus.getDirection()},
-            {"lastStop", bus.getLastStop()},
-            {"lastPark", bus.getLastPark()},
-            {"capacity", bus.getCapacity()},
-            {"priority", bus.getPriority()},
-            {"available", bus.isAvailable()},
-            {"maintenance", bus.isMaintenance()},
-            {"currentStopIndex", bus.getCurrentStopIndex()},
-            {"elapsedTime", bus.getElapsedTime()},
-            {"progress", bus.getProgress()}
-        });
-    }
-
-    res.set_content(response.dump(4), "application/json"); });
 
     // ========================================================
     // MOVE BUS TO MAINTENANCE
@@ -987,7 +830,8 @@ void Server::start(BusManager &manager)
                             body["busNumber"].get<string>();
 
                         Bus *bus =
-                            manager.searchBusByNumber(busNumber);
+                            manager.searchBusByNumber(
+                                busNumber);
 
                         if (bus == nullptr)
                         {
@@ -1000,7 +844,8 @@ void Server::start(BusManager &manager)
                             return;
                         }
 
-                        int busID = bus->getID();
+                        int busID =
+                            bus->getID();
 
                         string currentStop =
                             bus->getCurrentStop();
@@ -1011,23 +856,32 @@ void Server::start(BusManager &manager)
                         string lastPark =
                             bus->getLastPark();
 
-                        manager.moveToMaintenance(busID);
+                        manager.moveToMaintenance(
+                            busID);
 
                         json response = {
                             {"message",
                              "Bus moved to maintenance successfully"},
-                            {"busNumber", busNumber},
-                            {"busID", busID},
-                            {"currentStop", currentStop},
-                            {"lastStop", lastStop},
-                            {"lastPark", lastPark},
-                            {"priority", 0},
-                            {"maintenance", true}};
+                            {"busNumber",
+                             busNumber},
+                            {"busID",
+                             busID},
+                            {"currentStop",
+                             currentStop},
+                            {"lastStop",
+                             lastStop},
+                            {"lastPark",
+                             lastPark},
+                            {"priority",
+                             0},
+                            {"maintenance",
+                             true}};
 
                         res.set_content(
                             response.dump(),
                             "application/json");
                     }
+
                     catch (const exception &e)
                     {
                         res.status = 400;
@@ -1035,7 +889,8 @@ void Server::start(BusManager &manager)
                         json response = {
                             {"message",
                              "Invalid maintenance request"},
-                            {"error", e.what()}};
+                            {"error",
+                             e.what()}};
 
                         res.set_content(
                             response.dump(),
@@ -1066,7 +921,8 @@ void Server::start(BusManager &manager)
                             return;
                         }
 
-                        json body = json::parse(req.body);
+                        json body =
+                            json::parse(req.body);
 
                         if (!body.contains("busNumber"))
                         {
@@ -1097,23 +953,12 @@ void Server::start(BusManager &manager)
                             return;
                         }
 
-                        int busID = bus->getID();
-
-                        /*
-                         * IMPORTANT:
-                         *
-                         * We deliberately restore every maintenance
-                         * bus to Ratnapark Buspark.
-                         *
-                         * This follows the backend rule we established:
-                         *
-                         * MAINTENANCE -> PARK 1
-                         * priority = 1
-                         * available = true
-                         */
+                        int busID =
+                            bus->getID();
 
                         bool restored =
-                            manager.restoreFromMaintenance(busID);
+                            manager.restoreFromMaintenance(
+                                busID);
 
                         if (!restored)
                         {
@@ -1129,19 +974,26 @@ void Server::start(BusManager &manager)
                         json response = {
                             {"message",
                              "Bus restored successfully"},
-                            {"busNumber", busNumber},
-                            {"busID", busID},
+                            {"busNumber",
+                             busNumber},
+                            {"busID",
+                             busID},
                             {"currentStop",
                              "Ratnapark Buspark"},
-                            {"direction", "east"},
-                            {"priority", 1},
-                            {"maintenance", false},
-                            {"available", true}};
+                            {"direction",
+                             "east"},
+                            {"priority",
+                             1},
+                            {"maintenance",
+                             false},
+                            {"available",
+                             true}};
 
                         res.set_content(
                             response.dump(),
                             "application/json");
                     }
+
                     catch (const exception &e)
                     {
                         res.status = 400;
@@ -1149,7 +1001,8 @@ void Server::start(BusManager &manager)
                         json response = {
                             {"message",
                              "Invalid restore request"},
-                            {"error", e.what()}};
+                            {"error",
+                             e.what()}};
 
                         res.set_content(
                             response.dump(),
@@ -1169,8 +1022,18 @@ void Server::start(BusManager &manager)
     cout << "Status   : http://localhost:8080/api/status\n";
     cout << "========================================\n";
 
-    const char *port_env = std::getenv("PORT");
-    int port = port_env ? std::stoi(port_env) : 8080;
+    // Render provides PORT through an environment variable.
+    // Locally, fall back to port 8080.
 
-    server.listen("0.0.0.0", port);
+    const char *port_env =
+        std::getenv("PORT");
+
+    int port =
+        port_env
+            ? std::stoi(port_env)
+            : 8080;
+
+    server.listen(
+        "0.0.0.0",
+        port);
 }
