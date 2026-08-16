@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>TransitNova | Live Map</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="app-shell">
+
+        <aside class="sidebar">
+
+            <a class="brand" href="index.html" aria-label="TransitNova Live Map">
+                <span class="brand-mark">
+                    <i data-lucide="bus-front"></i>
+                </span>
+                <span>TransitNova</span>
+            </a>
+
+            <nav class="sidebar-nav" aria-label="Main navigation">
+
+                <a class="nav-link active" href="index.html">
+                    <i data-lucide="map"></i>
+                    <span>Live Map</span>
+                </a>
+
+                <a class="nav-link" href="journey.html">
+                    <i data-lucide="route"></i>
+                    <span>Journey Planner</span>
+                </a>
+
+                <a class="nav-link" href="search.html">
+                    <i data-lucide="search"></i>
+                    <span>Bus Search</span>
+                </a>
+
+            </nav>
+
+            <section class="sidebar-promo">
+                <div class="promo-art">
+                    <i data-lucide="bus-front"></i>
+                </div>
+
+                <h2>TransitNova</h2>
+                <p>Smart · Reliable · Efficient</p>
+                <span>Kathmandu - Bode Route</span>
+            </section>
+
+        </aside>
+
+
+        <main class="main-content">
+
+            <header class="topbar">
+
+                <div class="connection-status" id="status" aria-live="polite">
+                    <span class="status-dot"></span>
+                    <span>Checking backend...</span>
+                </div>
+
+                <p class="live-time">
+                    Live Time:
+                    <time id="liveTime">--:--:--</time>
+                </p>
+
+                <div class="topbar-actions">
+
+                    <div class="theme-switcher" aria-label="Theme selector">
+
+                        <button class="theme-button" id="lightTheme" type="button" aria-label="Use light theme">
+
+                            <i data-lucide="sun"></i>
+
+                        </button>
+
+                        <button class="theme-button active" id="darkTheme" type="button" aria-label="Use dark theme">
+
+                            <i data-lucide="moon"></i>
+
+                        </button>
+
+                    </div>
+
+                    <span class="date-display">
+                        <i data-lucide="calendar-days"></i>
+                        <span id="currentDate">Loading date...</span>
+                    </span>
+
+                </div>
+
+            </header>
+
+
+            <section class="stat-grid" aria-label="Transit statistics">
+
+                <article class="stat-card accent-blue">
+                    <span class="stat-icon">
+                        <i data-lucide="bus-front"></i>
+                    </span>
+
+                    <div>
+                        <p>Total Buses</p>
+                        <strong id="totalBuses">--</strong>
+                        <small>Active</small>
+                    </div>
+                </article>
+
+                <article class="stat-card accent-green">
+                    <span class="stat-icon">
+                        <i data-lucide="bus"></i>
+                    </span>
+
+                    <div>
+                        <p>On Route</p>
+                        <strong id="runningBuses">--</strong>
+                        <small>Running</small>
+                    </div>
+                </article>
+
+                <article class="stat-card accent-yellow">
+                    <span class="stat-icon">
+                        <i data-lucide="circle-parking"></i>
+                    </span>
+
+                    <div>
+                        <p>At Ratnapark</p>
+                        <strong id="ratnaparkCount">--</strong>
+                        <small>Ready for Bode</small>
+                    </div>
+                </article>
+
+                <article class="stat-card accent-purple">
+                    <span class="stat-icon">
+                        <i data-lucide="circle-parking"></i>
+                    </span>
+
+                    <div>
+                        <p>At Bode</p>
+                        <strong id="bodeCount">--</strong>
+                        <small>Ready for Ratnapark</small>
+                    </div>
+                </article>
+
+                <article class="stat-card accent-red">
+                    <span class="stat-icon">
+                        <i data-lucide="wrench"></i>
+                    </span>
+
+                    <div>
+                        <p>In Maintenance</p>
+                        <strong id="maintenanceCount">--</strong>
+                        <small>Under Repair</small>
+                    </div>
+                </article>
+
+                <article class="stat-card accent-blue">
+                    <span class="stat-icon">
+                        <i data-lucide="map-pin"></i>
+                    </span>
+
+                    <div>
+                        <p>Total Stops</p>
+                        <strong id="totalStops">18</strong>
+                        <small>Stops</small>
+                    </div>
+                </article>
+
+            </section>
+
+
+            <section class="route-panel panel" id="live-map">
+
+                <div class="panel-heading route-heading">
+
+                    <div>
+                        <h1>Live Route Map</h1>
+                        <p>Ratnapark ↔ Bode Buspark</p>
+                    </div>
+
+                    <div class="route-legend">
+                        <span>
+                            <b class="legend-line eastbound"></b>
+                            To Bode
+                        </span>
+
+                        <span>
+                            <b class="legend-line westbound"></b>
+                            To Ratnapark
+                        </span>
+                    </div>
+
+                </div>
+
+
+                <div id="routeMonitor" class="route-monitor">
+
+                    <div class="highway">
+
+                        <div class="route-lane lane-east">
+                            <span class="direction-label">
+                                Ratnapark → Bode
+                            </span>
+
+                            <i class="lane-arrow" data-lucide="arrow-right">
+                            </i>
+                        </div>
+
+                        <div class="road-divider"></div>
+
+                        <div class="route-lane lane-west">
+                            <span class="direction-label">
+                                Bode → Ratnapark
+                            </span>
+
+                            <i class="lane-arrow" data-lucide="arrow-left">
+                            </i>
+                        </div>
+
+                    </div>
+
+
+                    <div class="route-stops">
+
+                        <button class="stop active" data-stop="Ratnapark Buspark" data-index="0">
+                            <span>Ratnapark<br>Buspark</span>
+                        </button>
+
+                        <button class="stop" data-stop="Singha Durbar" data-index="1">
+                            <span>Singha<br>Durbar</span>
+                        </button>
+
+                        <button class="stop" data-stop="Maitighar" data-index="2">
+                            <span>Maitighar</span>
+                        </button>
+
+                        <button class="stop" data-stop="Bijulibazar" data-index="3">
+                            <span>Bijulibazar</span>
+                        </button>
+
+                        <button class="stop" data-stop="Baneshwor" data-index="4">
+                            <span>Baneshwor</span>
+                        </button>
+
+                        <button class="stop" data-stop="Civil" data-index="5">
+                            <span>Civil</span>
+                        </button>
+
+                        <button class="stop" data-stop="Shantinagar" data-index="6">
+                            <span>Shantinagar</span>
+                        </button>
+
+                        <button class="stop" data-stop="Tinkune" data-index="7">
+                            <span>Tinkune</span>
+                        </button>
+
+                        <button class="stop" data-stop="Koteshwor" data-index="8">
+                            <span>Koteshwor</span>
+                        </button>
+
+                        <button class="stop" data-stop="Jadibuti" data-index="9">
+                            <span>Jadibuti</span>
+                        </button>
+
+                        <button class="stop" data-stop="Lokanthali" data-index="10">
+                            <span>Lokanthali</span>
+                        </button>
+
+                        <button class="stop" data-stop="Kaushaltar" data-index="11">
+                            <span>Kaushaltar</span>
+                        </button>
+
+                        <button class="stop" data-stop="Gatthaghar" data-index="12">
+                            <span>Gatthaghar</span>
+                        </button>
+
+                        <button class="stop" data-stop="Thimi" data-index="13">
+                            <span>Thimi</span>
+                        </button>
+
+                        <button class="stop" data-stop="Bode Chardobato" data-index="14">
+                            <span>Bode<br>Chardobato</span>
+                        </button>
+
+                        <button class="stop" data-stop="Bode Planning" data-index="15">
+                            <span>Bode<br>Planning</span>
+                        </button>
+
+                        <button class="stop" data-stop="Jaya School" data-index="16">
+                            <span>Jaya<br>School</span>
+                        </button>
+
+                        <button class="stop" data-stop="Bode Buspark" data-index="17">
+                            <span>Bode<br>Buspark</span>
+                        </button>
+
+                    </div>
+
+
+                    <div id="liveBuses" aria-live="polite"></div>
+
+
+                    <aside class="stop-popover" id="stopPopover" aria-live="polite">
+
+                        <h3 id="popoverStop">Tinkune</h3>
+
+                        <div class="popover-summary" id="popoverSummary">
+                        </div>
+
+                        <div class="popover-bus-list" id="popoverBusList">
+                            No buses currently at this stop.
+                        </div>
+
+                    </aside>
+
+                </div>
+
+            </section>
+
+
+            <section class="operations-grid" aria-label="Bus park and maintenance overview">
+
+                <article class="queue-panel panel">
+
+                    <header class="mini-panel-header">
+                        <h2>
+                            <span class="mini-label yellow">R</span>
+                            Ratnapark Bus Park Queue
+                        </h2>
+                    </header>
+
+                    <div id="ratnaparkQueue" class="queue-list">
+                        Loading queue...
+                    </div>
+
+                    <footer class="mini-panel-footer">
+                        <span>
+                            Total:
+                            <b id="ratnaparkTotal">--</b>
+                        </span>
+
+                        <span class="queue-direction">
+                            Departing to Bode
+                        </span>
+                    </footer>
+
+                </article>
+
+
+                <article class="queue-panel panel">
+
+                    <header class="mini-panel-header">
+                        <h2>
+                            <span class="mini-label purple">B</span>
+                            Bode Bus Park Queue
+                        </h2>
+                    </header>
+
+                    <div id="bodeQueue" class="queue-list">
+                        Loading queue...
+                    </div>
+
+                    <footer class="mini-panel-footer">
+                        <span>
+                            Total:
+                            <b id="bodeTotal">--</b>
+                        </span>
+
+                        <span class="queue-direction">
+                            Departing to Ratnapark
+                        </span>
+                    </footer>
+
+                </article>
+
+
+                <article class="queue-panel panel" id="maintenance">
+
+                    <header class="mini-panel-header">
+                        <h2>
+                            <i class="header-icon red-icon" data-lucide="wrench">
+                            </i>
+                            Maintenance Bay
+                        </h2>
+                    </header>
+
+                    <div id="maintenanceQueue" class="maintenance-list">
+                        Loading maintenance queue...
+                    </div>
+
+                    <footer class="mini-panel-footer">
+                        <span>
+                            Total:
+                            <b id="maintenanceTotal">--</b>
+                        </span>
+                    </footer>
+
+                </article>
+
+            </section>
+
+
+            <footer class="app-footer">
+                <span>© 2026 TransitNova. All rights reserved.</span>
+                <span>Version 1.0.0</span>
+            </footer>
+
+        </main>
+
+    </div>
+
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="script.js"></script>
+
+</body>
+
+</html>

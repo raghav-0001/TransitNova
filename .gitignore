@@ -1,0 +1,10 @@
+# Build files
+*.o
+*.out
+TransitNova
+
+# VS Code
+.vscode/
+
+# Temporary files
+*.log

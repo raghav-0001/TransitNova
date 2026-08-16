@@ -1,0 +1,9 @@
+/* Inside the /backend/src directory */
+
+// for linux
+g++ -std=c++20 *.cpp -o TransitNova -pthread
+
+// for windows
+g++ *.cpp -std=c++20 -lws2_32 -pthread -o TransitNova
+
+./TransitNova

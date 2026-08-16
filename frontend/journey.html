@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="TransitNova Journey Planner - Find the best available bus for your journey.">
+
+    <title>TransitNova | Journey Planner</title>
+
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
+        rel="stylesheet">
+
+
+    <!-- Application styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+
+<body>
+
+    <div class="app-shell">
+
+
+        <!-- ==================================================
+             SIDEBAR
+             ================================================== -->
+
+        <aside class="sidebar">
+
+            <a class="brand" href="index.html" aria-label="TransitNova Live Map">
+
+                <span class="brand-mark">
+                    <i data-lucide="bus-front"></i>
+                </span>
+
+                <span>
+                    TransitNova
+                </span>
+
+            </a>
+
+
+            <nav class="sidebar-nav" aria-label="Main navigation">
+
+                <a class="nav-link" href="index.html">
+
+                    <i data-lucide="map"></i>
+
+                    <span>
+                        Live Map
+                    </span>
+
+                </a>
+
+
+                <a class="nav-link active" href="journey.html" aria-current="page">
+
+                    <i data-lucide="route"></i>
+
+                    <span>
+                        Journey Planner
+                    </span>
+
+                </a>
+
+
+                <a class="nav-link" href="search.html">
+
+                    <i data-lucide="search"></i>
+
+                    <span>
+                        Bus Search
+                    </span>
+
+                </a>
+
+            </nav>
+
+
+            <section class="sidebar-promo" aria-label="TransitNova route">
+
+                <div class="promo-art">
+
+                    <i data-lucide="bus-front"></i>
+
+                </div>
+
+                <h2>
+                    TransitNova
+                </h2>
+
+                <p>
+                    Smart · Reliable · Efficient
+                </p>
+
+                <span>
+                    Kathmandu - Bode Route
+                </span>
+
+            </section>
+
+        </aside>
+
+
+
+        <!-- ==================================================
+             MAIN CONTENT
+             ================================================== -->
+
+        <main class="main-content">
+
+
+            <!-- ==================================================
+                 TOP BAR
+                 ================================================== -->
+
+            <header class="topbar">
+
+                <div class="connection-status" id="status" aria-live="polite">
+
+                    <span class="status-dot"></span>
+
+                    <span>
+                        Checking backend...
+                    </span>
+
+                </div>
+
+
+                <p class="live-time">
+
+                    Live Time:
+
+                    <time id="liveTime">
+                        --:--:--
+                    </time>
+
+                </p>
+
+
+                <div class="topbar-actions">
+
+
+                    <!-- Theme -->
+                    <div class="theme-switcher" aria-label="Theme selector">
+
+                        <button class="theme-button" id="lightTheme" type="button" aria-label="Use light theme">
+
+                            <i data-lucide="sun"></i>
+
+                        </button>
+
+
+                        <button class="theme-button active" id="darkTheme" type="button" aria-label="Use dark theme">
+
+                            <i data-lucide="moon"></i>
+
+                        </button>
+
+                    </div>
+
+
+                    <!-- Date -->
+                    <span class="date-display">
+
+                        <i data-lucide="calendar-days"></i>
+
+                        <span id="currentDate">
+                            Loading date...
+                        </span>
+
+                    </span>
+
+                </div>
+
+            </header>
+
+
+
+            <!-- ==================================================
+                 JOURNEY PLANNER
+                 ================================================== -->
+
+            <section class="journey-page" aria-labelledby="journeyTitle">
+
+
+                <!-- Page heading -->
+                <header class="journey-page-heading">
+
+                    <span class="journey-heading-icon">
+                        <i data-lucide="route"></i>
+                    </span>
+
+
+                    <div>
+
+                        <p class="eyebrow">
+                            KATHMANDU - BODE TRANSIT
+                        </p>
+
+                        <h1 id="journeyTitle">
+                            Plan your journey
+                        </h1>
+
+                        <p>
+                            Choose your stops to find
+                            the nearest bus and complete
+                            trip estimate.
+                        </p>
+
+                    </div>
+
+                </header>
+
+
+
+                <!-- ==================================================
+                     JOURNEY FORM
+                     ================================================== -->
+
+                <section class="journey-planner-card panel">
+
+                    <div class="planner-card-heading">
+
+                        <div>
+
+                            <h2>
+                                Where are you going?
+                            </h2>
+
+                            <p>
+                                We will find the best
+                                available buses on this route.
+                            </p>
+
+                        </div>
+
+
+                        <span class="route-pill">
+
+                            <i data-lucide="navigation"></i>
+
+                            Live route data
+
+                        </span>
+
+                    </div>
+
+
+
+                    <form id="journeyForm" class="journey-form">
+
+
+                        <!-- Pickup -->
+                        <div class="journey-field">
+
+                            <label for="fromStop">
+
+                                <i data-lucide="map-pin"></i>
+
+                                Your current stop
+
+                            </label>
+
+
+                            <div class="select-shell">
+
+                                <select id="fromStop" name="from" required>
+
+                                    <option value="" selected disabled>
+
+                                        Select your location
+
+                                    </option>
+
+                                    <option value="Ratnapark Buspark">
+                                        Ratnapark Buspark
+                                    </option>
+
+                                    <option value="Singha Durbar">
+                                        Singha Durbar
+                                    </option>
+
+                                    <option value="Maitighar">
+                                        Maitighar
+                                    </option>
+
+                                    <option value="Bijulibazar">
+                                        Bijulibazar
+                                    </option>
+
+                                    <option value="Baneshwor">
+                                        Baneshwor
+                                    </option>
+
+                                    <option value="Civil">
+                                        Civil
+                                    </option>
+
+                                    <option value="Shantinagar">
+                                        Shantinagar
+                                    </option>
+
+                                    <option value="Tinkune">
+                                        Tinkune
+                                    </option>
+
+                                    <option value="Koteshwor">
+                                        Koteshwor
+                                    </option>
+
+                                    <option value="Jadibuti">
+                                        Jadibuti
+                                    </option>
+
+                                    <option value="Lokanthali">
+                                        Lokanthali
+                                    </option>
+
+                                    <option value="Kaushaltar">
+                                        Kaushaltar
+                                    </option>
+
+                                    <option value="Gatthaghar">
+                                        Gatthaghar
+                                    </option>
+
+                                    <option value="Thimi">
+                                        Thimi
+                                    </option>
+
+                                    <option value="Bode Chardobato">
+                                        Bode Chardobato
+                                    </option>
+
+                                    <option value="Bode Planning">
+                                        Bode Planning
+                                    </option>
+
+                                    <option value="Jaya School">
+                                        Jaya School
+                                    </option>
+
+                                    <option value="Bode Buspark">
+                                        Bode Buspark
+                                    </option>
+
+                                </select>
+
+
+                                <i data-lucide="chevron-down"></i>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- Swap -->
+                        <button class="swap-stops-button" id="swapStops" type="button"
+                            aria-label="Swap pickup and destination">
+
+                            <i data-lucide="arrow-left-right"></i>
+
+                        </button>
+
+
+
+                        <!-- Destination -->
+                        <div class="journey-field">
+
+                            <label for="toStop">
+
+                                <i data-lucide="flag"></i>
+
+                                Your destination
+
+                            </label>
+
+
+                            <div class="select-shell">
+
+                                <select id="toStop" name="to" required>
+
+                                    <option value="" selected disabled>
+
+                                        Select your destination
+
+                                    </option>
+
+                                    <option value="Ratnapark Buspark">
+                                        Ratnapark Buspark
+                                    </option>
+
+                                    <option value="Singha Durbar">
+                                        Singha Durbar
+                                    </option>
+
+                                    <option value="Maitighar">
+                                        Maitighar
+                                    </option>
+
+                                    <option value="Bijulibazar">
+                                        Bijulibazar
+                                    </option>
+
+                                    <option value="Baneshwor">
+                                        Baneshwor
+                                    </option>
+
+                                    <option value="Civil">
+                                        Civil
+                                    </option>
+
+                                    <option value="Shantinagar">
+                                        Shantinagar
+                                    </option>
+
+                                    <option value="Tinkune">
+                                        Tinkune
+                                    </option>
+
+                                    <option value="Koteshwor">
+                                        Koteshwor
+                                    </option>
+
+                                    <option value="Jadibuti">
+                                        Jadibuti
+                                    </option>
+
+                                    <option value="Lokanthali">
+                                        Lokanthali
+                                    </option>
+
+                                    <option value="Kaushaltar">
+                                        Kaushaltar
+                                    </option>
+
+                                    <option value="Gatthaghar">
+                                        Gatthaghar
+                                    </option>
+
+                                    <option value="Thimi">
+                                        Thimi
+                                    </option>
+
+                                    <option value="Bode Chardobato">
+                                        Bode Chardobato
+                                    </option>
+
+                                    <option value="Bode Planning">
+                                        Bode Planning
+                                    </option>
+
+                                    <option value="Jaya School">
+                                        Jaya School
+                                    </option>
+
+                                    <option value="Bode Buspark">
+                                        Bode Buspark
+                                    </option>
+
+                                </select>
+
+
+                                <i data-lucide="chevron-down"></i>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- Submit -->
+                        <button class="plan-journey-button" type="submit">
+
+                            <i data-lucide="search"></i>
+
+                            <span>
+                                Find my bus
+                            </span>
+
+                        </button>
+
+                    </form>
+
+
+                    <p id="journeyMessage" class="journey-message" role="status" aria-live="polite" aria-atomic="true">
+                    </p>
+
+                </section>
+
+
+                <!-- ==================================================
+                         ROUTE SUMMARY
+                         ================================================== -->
+
+                <section class="trip-route-card panel" aria-label="Journey route">
+
+
+                    <!-- Boarding stop -->
+                    <div class="trip-stop">
+
+                        <span class="trip-marker from-marker">
+
+                            <i data-lucide="map-pin"></i>
+
+                        </span>
+
+
+                        <div>
+
+                            <small>
+                                BOARD AT
+                            </small>
+
+                            <strong id="resultFromStop">
+                                --
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- Route connector -->
+                    <div class="trip-line">
+
+                        <span id="stopCount">
+                            0 stops
+                        </span>
+
+                        <i data-lucide="arrow-right"></i>
+
+                    </div>
+
+
+
+                    <!-- Destination -->
+                    <div class="trip-stop destination-stop">
+
+                        <span class="trip-marker to-marker">
+
+                            <i data-lucide="flag"></i>
+
+                        </span>
+
+
+                        <div>
+
+                            <small>
+                                GET OFF AT
+                            </small>
+
+                            <strong id="resultToStop">
+                                --
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+
+
+                <!-- ==================================================
+                     JOURNEY RESULTS
+                     ================================================== -->
+
+                <section class="journey-result-section" id="journeyResult" aria-label="Journey results" hidden>
+
+
+                    <!-- Result heading -->
+                    <header class="result-heading">
+
+                        <div>
+
+                            <p class="eyebrow">
+                                YOUR JOURNEY
+                            </p>
+
+                            <h2>
+                                Available buses
+                            </h2>
+
+                        </div>
+
+
+                        <span class="recommendation-badge">
+
+                            <i data-lucide="sparkles"></i>
+
+                            Top 3 recommended
+
+                        </span>
+
+                    </header>
+
+
+
+                    <!-- ==================================================
+                         BUS LIST
+
+                         journey.js inserts up to 3 cards here.
+
+                         First card = recommended.
+                         Remaining cards = normal.
+                         ================================================== -->
+
+                    <section id="availableBuses" class="available-buses-list" aria-label="Available buses"
+                        aria-live="polite">
+
+                        <!--
+                            Cards are generated by journey.js.
+                        -->
+
+                    </section>
+
+
+
+
+
+                    <!-- ==================================================
+                         JOURNEY METRICS
+                         ================================================== -->
+
+                    <section class="journey-metrics" aria-label="Journey time estimates">
+
+
+                        <!-- Travel time -->
+                        <article class="journey-metric panel">
+
+                            <span class="metric-icon green-metric">
+
+                                <i data-lucide="timer"></i>
+
+                            </span>
+
+
+                            <div>
+
+                                <p>
+                                    Travel time
+                                </p>
+
+                                <strong id="travelTime">
+                                    -- min
+                                </strong>
+
+                                <small>
+                                    From boarding to destination
+                                </small>
+
+                            </div>
+
+                        </article>
+
+
+
+                        <!-- Total time -->
+                        <article class="journey-metric panel">
+
+                            <span class="metric-icon yellow-metric">
+
+                                <i data-lucide="route"></i>
+
+                            </span>
+
+
+                            <div>
+
+                                <p>
+                                    Total time
+                                </p>
+
+                                <strong id="totalTime">
+                                    -- min
+                                </strong>
+
+                                <small>
+                                    Wait time + travel time
+                                </small>
+
+                            </div>
+
+                        </article>
+
+
+
+                        <!-- Destination arrival -->
+                        <article class="journey-metric panel">
+
+                            <span class="metric-icon purple-metric">
+
+                                <i data-lucide="flag"></i>
+
+                            </span>
+
+
+                            <div>
+
+                                <p>
+                                    Destination arrival
+                                </p>
+
+                                <strong id="destinationTime">
+                                    --
+                                </strong>
+
+                                <small>
+                                    Estimated arrival time
+                                </small>
+
+                            </div>
+
+                        </article>
+
+                    </section>
+
+                </section>
+
+
+
+                <!-- ==================================================
+                     FOOTER
+                     ================================================== -->
+
+                <footer class="app-footer">
+
+                    <span>
+                        © 2026 TransitNova.
+                        All rights reserved.
+                    </span>
+
+                    <span>
+                        Version 1.0.0
+                    </span>
+
+                </footer>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+
+    <!-- ==================================================
+         ICONS + PAGE SCRIPT
+         ================================================== -->
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script src="journey.js"></script>
+
+</body>
+
+</html>
