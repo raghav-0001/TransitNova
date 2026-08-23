@@ -1,5 +1,4 @@
 
-````markdown
 # 🚍 TransitNova
 
 ## Real-Time Bus Transit Operations, Live Tracking & Journey Planning System
