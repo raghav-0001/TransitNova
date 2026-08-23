@@ -445,8 +445,23 @@ void BusManager::updateBuses(float deltaTime)
     // 3. Advance terminal timers
     // --------------------------------------------------------
 
-    park1DispatchTimer += deltaTime;
-    park2DispatchTimer += deltaTime;
+    if (!parkQueue1.isEmpty())
+    {
+        park1DispatchTimer += deltaTime;
+    }
+    else
+    {
+        park1DispatchTimer = 0.0f;
+    }
+
+    if (!parkQueue2.isEmpty())
+    {
+        park2DispatchTimer += deltaTime;
+    }
+    else
+    {
+        park2DispatchTimer = 0.0f;
+    }
 
     // --------------------------------------------------------
     // 4. Dispatch a bus from Ratnapark
@@ -459,8 +474,12 @@ void BusManager::updateBuses(float deltaTime)
 
         if (dispatched.getID() != 0)
         {
-            // Preserve leftover time instead of throwing it away.
-            park1DispatchTimer -= TERMINAL_DWELL_TIME;
+            // If this was the last bus in the park,
+            // completely reset the timer.
+            if (parkQueue1.isEmpty())
+                park1DispatchTimer = 0.0f;
+            else
+                park1DispatchTimer -= TERMINAL_DWELL_TIME;
         }
     }
 
@@ -475,8 +494,12 @@ void BusManager::updateBuses(float deltaTime)
 
         if (dispatched.getID() != 0)
         {
-            // Preserve leftover time instead of throwing it away.
-            park2DispatchTimer -= TERMINAL_DWELL_TIME;
+            // If this was the last bus in the park,
+            // completely reset the timer.
+            if (parkQueue2.isEmpty())
+                park2DispatchTimer = 0.0f;
+            else
+                park2DispatchTimer -= TERMINAL_DWELL_TIME;
         }
     }
 }
