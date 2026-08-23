@@ -1,117 +1,173 @@
+
+````markdown
 # 🚍 TransitNova
 
 ## Real-Time Bus Transit Operations, Live Tracking & Journey Planning System
 
-**TransitNova** is a web-based bus transit simulation and management system designed to model a real-world public transportation network between **Ratnapark Buspark and Bode Buspark, Kathmandu**.
+**TransitNova** is a bus transit simulation and management system developed using **C++20, Data Structures & Algorithms, and web technologies**.
 
-The project combines a **C++20 backend**, custom data structures and algorithms, a continuous bus simulation engine, an HTTP API, and a modern **HTML, CSS and JavaScript frontend**. The backend acts as the core of the system, maintaining buses, routes, terminal queues, maintenance states, travel information and the live simulation, while the frontend provides an interactive interface for users to monitor and interact with the transit system.
+It simulates **22 buses** operating between **Ratnapark Buspark and Bode Buspark** across **18 stops**, with buses travelling in both directions. The C++ backend manages the complete transit system while the frontend provides live visualization and user interaction.
 
-The current system simulates a fleet of **22 buses operating across 18 stops** in both directions. Buses can be dispatched from either terminal, travel through the route, stop at intermediate locations, reach the opposite terminal, return to a departure queue, and continue operating. Buses can also be placed into maintenance and removed from active service.
+---
 
-TransitNova is developed as a **Data Structures and Algorithms project**, with the data structures integrated directly into the application's functionality rather than being implemented as isolated examples. **Linked Lists** are used for dynamic bus collections and operational lists, a **Doubly Linked List** represents the bidirectional route, a **Binary Search Tree** provides efficient bus searching, and **Queues** manage terminal departures. The backend also uses **threads and synchronization** to keep the bus simulation running while handling HTTP requests.
+## ✨ Features
 
-### ✨ Main Features
+- 🚌 Live bus tracking and route visualization
+- 🧭 Journey planner with estimated travel times
+- 🔎 Bus search by bus number
+- 🅿️ FIFO terminal bus queues
+- 🔧 Bus maintenance and restoration
+- 🔄 Continuous bidirectional bus simulation
+- ⏱️ Controlled bus dispatching
+- 🌐 C++ HTTP/JSON API
+- 🌗 Dark and light frontend themes
 
-- 🚌 **Live Bus Tracking** — Monitor active buses, their current stops, directions and route progress.
-- 🗺️ **Interactive Route Map** — Visualize the complete 18-stop Ratnapark–Bode route.
-- 🧭 **Journey Planner** — Select pickup and destination stops and find suitable buses with estimated travel information.
-- 🔎 **Bus Search** — Search buses by bus number and view their current operational state.
-- 🅿️ **Terminal Management** — Manage buses waiting at Ratnapark and Bode through departure queues.
-- 🔧 **Maintenance Management** — Track buses currently unavailable for service.
-- ⏱️ **Travel-Time Estimation** — Calculate estimated bus arrival and journey duration.
-- 🔄 **Live Simulation** — Continuously simulate bus movement and terminal operations.
-- 🔌 **HTTP API** — Connect the frontend with the C++ backend using API requests and JSON data.
-- 🌗 **Modern Interface** — Responsive dashboard with live statistics, interactive components and dark/light themes.
+---
 
-### 🛣️ Route
+## 🛣️ Route
 
 ```text
 Ratnapark Buspark
-       ↓
-Singha Durbar
-       ↓
-Maitighar
-       ↓
-Bijulibazar
-       ↓
-Baneshwor
-       ↓
-Civil
-       ↓
-Shantinagar
-       ↓
-Tinkune
-       ↓
-Koteshwor
-       ↓
-Jadibuti
-       ↓
-Lokanthali
-       ↓
-Kaushaltar
-       ↓
-Gatthaghar
-       ↓
-Thimi
-       ↓
-Bode Chardobato
-       ↓
-Bode Planning
-       ↓
-Jaya School
-       ↓
-Bode Buspark
+→ Singha Durbar
+→ Maitighar
+→ Bijulibazar
+→ Baneshwor
+→ Civil
+→ Shantinagar
+→ Tinkune
+→ Koteshwor
+→ Jadibuti
+→ Lokanthali
+→ Kaushaltar
+→ Gatthaghar
+→ Thimi
+→ Bode Chardobato
+→ Bode Planning
+→ Jaya School
+→ Bode Buspark
 ````
 
-**Eastbound:** Ratnapark Buspark → Bode Buspark
-
-
-**Westbound:** Bode Buspark → Ratnapark Buspark
-
-### 🏗️ How It Works
+The route operates in both directions:
 
 ```text
-                 🚍 TransitNova
-                       │
-          ┌────────────┴────────────┐
-          │                         │
-     🌐 Frontend                ⚙️ Backend
-   HTML/CSS/JavaScript          C++20/HTTP
-          │                         │
-          └────────── HTTP ─────────┘
-                    │
-                    ▼
-               🧠 BusManager
-                    │
-       ┌────────────┼────────────┐
-       │            │            │
-     🚌 Buses     🛣️ Route     🅿️ Queues
-       │            │            │
-       └────────────┼────────────┘
-                    ▼
-             🔄 Simulation
+Ratnapark → Bode
+Bode → Ratnapark
 ```
 
-The **C++ backend is the source of truth** for the transit system. It continuously updates the live state of buses while simultaneously serving API requests from the frontend. The browser retrieves this information and updates the dashboard, allowing users to observe the simulated transit network in real time.
+---
 
-### 🧠 Data Structures
+## 🧠 Data Structures & Algorithms
 
-| Data Structure         | Application                                            |
-| ---------------------- | ------------------------------------------------------ |
-| **Linked List**        | Active buses, maintenance and dynamic collections      |
-| **Doubly Linked List** | Bidirectional route and stop traversal                 |
-| **Binary Search Tree** | Bus searching and lookup                               |
-| **Queue**              | Terminal departure management                          |
-| **Stack**              | Stack-based operations                                 |
-| **Threads + Mutex**    | Continuous simulation and shared-state synchronization |
+| Data Structure         | Actual Use                                          |
+| ---------------------- | --------------------------------------------------- |
+| **Linked List**        | Active buses, maintenance buses and terminal queues |
+| **Queue**              | FIFO bus dispatching using the Linked List          |
+| **Doubly Linked List** | Bidirectional 18-stop route                         |
+| **Binary Search Tree** | Bus indexing and searching                          |
+| **Arrays**             | Route and travel-time data                          |
+| **Vector**             | Temporary collections and journey results           |
+| **Threads + Mutex**    | Continuous simulation and synchronization           |
+| **Sorting**            | Ranking buses by estimated arrival time             |
 
-### 🛠️ Technology Stack
+> **Note:** The final implementation does **not** contain a Stack. Previous documentation referring to a Stack belonged to an older version.
 
-**Backend:** C++20, cpp-httplib, nlohmann/json, C++ Threads
-**Frontend:** HTML5, CSS3, JavaScript, Lucide Icons
-**Development:** Git, GitHub, GCC/G++, VS Code
+---
 
-### 📂 Project Structure
+## 🔄 Bus Simulation
+
+Buses continuously move between route stops using recorded travel times.
+
+```text
+Buspark Queue
+     ↓
+Dispatch
+     ↓
+Running
+     ↓
+Opposite Buspark
+     ↓
+Departure Queue
+     ↓
+Running Again
+```
+
+Each terminal has its own dispatch timer. When a bus reaches a terminal, it is placed into that terminal's queue and can later be dispatched in the opposite direction.
+
+---
+
+## 🧭 Journey Planner
+
+The Journey Planner:
+
+1. Finds the selected stops.
+2. Determines the required direction.
+3. Calculates travel time using route transition times.
+4. Finds suitable active buses.
+5. Calculates their estimated arrival.
+6. Returns the **top 3 nearest buses**.
+
+---
+
+## 🔧 Maintenance
+
+Buses can be removed from service and placed into a maintenance list.
+
+```text
+Running / Parked
+       ↓
+ Maintenance
+       ↓
+    Restore
+       ↓
+Ratnapark Queue
+```
+
+Restored buses can re-enter normal operation.
+
+---
+
+## 🌐 Backend API
+
+The backend uses **cpp-httplib** and **nlohmann/json**.
+
+| Endpoint                        | Purpose                 |
+| ------------------------------- | ----------------------- |
+| `GET /api/status`               | Backend status          |
+| `GET /api/buses`                | Current fleet data      |
+| `POST /api/journey`             | Journey planning        |
+| `POST /api/search`              | Bus search              |
+| `POST /api/maintenance`         | Send bus to maintenance |
+| `POST /api/maintenance/restore` | Restore bus             |
+
+---
+
+## 🏗️ Architecture
+
+```text
+Frontend
+HTML / CSS / JavaScript
+        │
+     HTTP/JSON
+        │
+        ▼
+C++ Backend
+        │
+   BusManager
+        │
+ ┌──────┼────────┐
+ │      │        │
+Lists   BST    Route
+ │               │
+ └───────┬───────┘
+         ↓
+  Simulation Engine
+```
+
+The simulation runs on a separate thread, while a mutex protects shared backend state.
+
+---
+
+## 📂 Project Structure
 
 ```text
 TransitNova/
@@ -127,52 +183,62 @@ TransitNova/
 │   ├── search.js
 │   ├── script.js
 │   └── style.css
-├── build.txt
-├── .gitignore
+├── Dockerfile
 └── readme.md
 ```
 
-### 🚀 Running Locally
+---
 
-Clone the repository:
+## 🛠️ Technology Stack
+
+**Backend:** C++20, cpp-httplib, nlohmann/json, Threads, Mutex
+
+**Frontend:** HTML5, CSS3, JavaScript, Lucide Icons
+
+**Tools:** GCC/G++, Git, GitHub, VS Code, Docker
+
+---
+
+## 🚀 Running Locally
 
 ```bash
 git clone https://github.com/raghav-0001/TransitNova.git
 cd TransitNova
-```
 
-Compile the C++ backend:
+g++ -std=c++20 backend/src/*.cpp \
+    -Ibackend/include \
+    -Ibackend \
+    -o TransitNova \
+    -pthread
 
-```bash
-cd backend/src
-g++ -std=c++20 *.cpp -o TransitNova -pthread
-```
-
-Run:
-
-```bash
 ./TransitNova
 ```
 
-On Windows with MinGW:
+Then open:
 
-```bash
-g++ *.cpp -std=c++20 -lws2_32 -pthread -o TransitNova
+```text
+http://localhost:8080
 ```
-
-```powershell
-.\TransitNova.exe
-```
-
-The C++ server handles the backend and serves the frontend, so a separate frontend development server is not required for the current setup.
 
 ---
 
 ## 📌 Project Status
 
-**Active Development — Version 1.0**
+### Version 1.0 — Final
 
-TransitNova currently includes live bus simulation, route visualization, bus searching, journey planning, terminal queues, maintenance management and frontend/backend API integration.
+TransitNova includes:
+
+* ✅ 22-bus simulation
+* ✅ 18-stop bidirectional route
+* ✅ Linked List, Doubly Linked List and BST
+* ✅ FIFO terminal queues
+* ✅ Live simulation
+* ✅ Journey Planner
+* ✅ Bus Search
+* ✅ Maintenance system
+* ✅ HTTP/JSON API
+* ✅ Thread synchronization
+* ✅ Docker support
 
 ---
 
@@ -188,11 +254,11 @@ TransitNova currently includes live bus simulation, route visualization, bus sea
 
 <div align="center">
 
-### 🚍 TransitNova
+# 🚍 TransitNova
 
 **Smart · Reliable · Efficient**
 
-*Built with C++20 and Web Technologies*
+*Built with C++20, Data Structures & Algorithms, and Web Technologies*
 
 </div>
 ```
