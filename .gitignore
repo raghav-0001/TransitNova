@@ -3,6 +3,7 @@
 *.out
 TransitNova
 *.exe
+*.txt
 
 # VS Code
 .vscode/
