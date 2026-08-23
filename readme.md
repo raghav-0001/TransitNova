@@ -68,7 +68,6 @@ Bode → Ratnapark
 | **Threads + Mutex**    | Continuous simulation and synchronization           |
 | **Sorting**            | Ranking buses by estimated arrival time             |
 
-> **Note:** The final implementation does **not** contain a Stack. Previous documentation referring to a Stack belonged to an older version.
 
 ---
 
